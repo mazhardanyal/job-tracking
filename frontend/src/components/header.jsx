@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 
-function Header({ onAdd, userImage }) {
+function Header({ onAdd, userImage, onProfileClick }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -25,14 +25,19 @@ function Header({ onAdd, userImage }) {
           Logout
         </button>
 
+        {/* Desktop Avatar clickable for Profile */}
         {userImage ? (
           <img
             src={userImage}
             alt="User"
-            className="w-12 h-12 rounded-full object-cover border-2 border-white hover:ring-4 hover:ring-green-300 transition-all"
+            onClick={onProfileClick} // <-- make it clickable
+            className="w-12 h-12 rounded-full object-cover border-2 border-white hover:ring-4 hover:ring-green-300 transition-all cursor-pointer"
           />
         ) : (
-          <div className="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center text-black">
+          <div
+            onClick={onProfileClick} // <-- fallback clickable
+            className="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center text-black cursor-pointer"
+          >
             U
           </div>
         )}
@@ -61,7 +66,10 @@ function Header({ onAdd, userImage }) {
           <button className="px-4 py-2 hover:bg-gray-200 text-left font-medium">
             Logout
           </button>
-          <div className="flex items-center px-4 py-2 gap-2 hover:bg-gray-200">
+          <div
+            onClick={onProfileClick} // <-- make mobile profile clickable
+            className="flex items-center px-4 py-2 gap-2 hover:bg-gray-200 cursor-pointer"
+          >
             {userImage ? (
               <img
                 src={userImage}
