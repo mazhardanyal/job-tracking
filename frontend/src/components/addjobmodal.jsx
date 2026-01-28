@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { FaMapMarkerAlt, FaDollarSign, FaClock } from "react-icons/fa";
+import axios from "axios";
 
-function AddJobModal({ isOpen, onClose, onSave }) {
+function AddJobModal({ isOpen, onClose, onJobAdded }) {
   const [title, setTitle] = useState("");
   const [company, setCompany] = useState("");
   const [status, setStatus] = useState("Applied");
@@ -11,11 +12,38 @@ function AddJobModal({ isOpen, onClose, onSave }) {
 
   if (!isOpen) return null;
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!title || !company) return alert("Please fill at least Job Title and Company!");
-    onSave({ title, company, status, location, salary, jobType, date: new Date().toISOString().split("T")[0] });
-    setTitle(""); setCompany(""); setStatus("Applied"); setLocation(""); setSalary(""); setJobType("");
-    onClose();
+
+    try {
+      const response = await axios.post(
+  "http://localhost:5000/api/jobs",
+  {
+    position: title,
+    company,
+    status,
+    location,
+    salary,
+    jobType,
+  },
+  {
+    headers: { "Content-Type": "application/json" }
+  }
+);
+
+
+      // call parent to update UI
+      onJobAdded(response.data);
+
+      // reset form
+      setTitle(""); setCompany(""); setStatus("Applied");
+      setLocation(""); setSalary(""); setJobType("");
+      onClose();
+
+    } catch (error) {
+      console.log(error);
+      alert("Failed to add job. Check console.");
+    }
   };
 
   return (

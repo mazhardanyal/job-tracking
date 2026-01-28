@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Header from "./components/Header";
+import Header from "./components/header";
 import JobCard from "./components/jobcard";
 import AddJobModal from "./components/addjobmodal";
 import JobSummary from "./components/jobsummary";
@@ -59,10 +59,11 @@ function App() {
 
       {/* Add Job Modal */}
       <AddJobModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSave={handleSaveJob}
-      />
+  isOpen={isModalOpen}
+  onClose={() => setIsModalOpen(false)}
+  onJobAdded={handleSaveJob} // <-- use the correct name
+/>
+
 
       {/* Profile Modal */}
       <ProfileModal
