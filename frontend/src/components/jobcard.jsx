@@ -1,6 +1,17 @@
 import { FaEdit, FaTrash, FaMapMarkerAlt, FaClock, FaDollarSign } from "react-icons/fa";
 
-function JobCard({ title, company, status, date, salary, location, jobType }) {
+function JobCard({ 
+  _id, 
+  title, 
+  company, 
+  status, 
+  date, 
+  salary, 
+  location, 
+  jobType,
+  onDelete, // function from App.jsx
+  onEdit    // function from App.jsx
+}) {
   const statusColor = {
     Applied: "from-blue-400 to-blue-600",
     Interview: "from-yellow-400 to-yellow-500",
@@ -55,10 +66,16 @@ function JobCard({ title, company, status, date, salary, location, jobType }) {
 
       {/* Footer Buttons */}
       <div className="flex justify-end gap-2 mt-4">
-        <button className="flex items-center gap-2 px-3 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-all">
+        <button
+          onClick={() => onEdit({ _id, title, company, status, location, salary, jobType, date })}
+          className="flex items-center gap-2 px-3 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-all"
+        >
           <FaEdit /> Edit
         </button>
-        <button className="flex items-center gap-2 px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all">
+        <button
+          onClick={() => onDelete(_id)}
+          className="flex items-center gap-2 px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all"
+        >
           <FaTrash /> Delete
         </button>
       </div>

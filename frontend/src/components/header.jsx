@@ -6,7 +6,7 @@ function Header({ onAdd, userImage, onProfileClick }) {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   return (
-    <header className="bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg p-4 flex justify-between items-center relative text-white">
+    <header className="bg-gradient-to-r from-blue-900 to-purple-600 shadow-lg p-4 flex justify-between items-center relative text-white">
       {/* Logo */}
       <h1 className="text-2xl md:text-3xl font-extrabold tracking-wide">
         JobTracking System 

@@ -1,9 +1,9 @@
-function JobSummary({ jobs }) {
+function JobSummary({ jobs = [] }) {
   const counts = {
-    Applied: jobs.filter((job) => job.status === "Applied").length,
-    Interview: jobs.filter((job) => job.status === "Interview").length,
-    Hired: jobs.filter((job) => job.status === "Hired").length,
-    Rejected: jobs.filter((job) => job.status === "Rejected").length,
+    Applied: jobs.filter(j => j.status === "Applied").length,
+    Interview: jobs.filter(j => j.status === "Interview").length,
+    Hired: jobs.filter(j => j.status === "Hired").length,
+    Rejected: jobs.filter(j => j.status === "Rejected").length,
   };
 
   const statusColor = {
@@ -18,10 +18,10 @@ function JobSummary({ jobs }) {
       {Object.keys(counts).map((status) => (
         <div
           key={status}
-          className={`flex flex-col justify-center items-center p-4 rounded-2xl shadow-lg ${statusColor[status]} text-white`}
+          className={`flex flex-col items-center p-4 rounded-2xl shadow-lg ${statusColor[status]} text-white`}
         >
           <span className="text-2xl font-bold">{counts[status]}</span>
-          <span className="capitalize">{status}</span>
+          <span>{status}</span>
         </div>
       ))}
     </div>
