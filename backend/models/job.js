@@ -2,16 +2,23 @@ import mongoose from "mongoose";
 
 const jobSchema = new mongoose.Schema(
   {
-    position: { type: String, required: true },
-    company: { type: String, required: true },
+    title: {
+      type: String,
+      required: true,
+    },
+    company: {
+      type: String,
+      required: true,
+    },
     status: {
       type: String,
-      enum: ["Applied", "Interview", "Hired", "Rejected"],
-      default: "Applied",
+      default: "pending",
     },
-    location: String,
-    salary: String,
-    jobType: String,
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
   },
   { timestamps: true }
 );

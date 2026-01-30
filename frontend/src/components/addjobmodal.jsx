@@ -9,6 +9,7 @@ function AddJobModal({ isOpen, onClose, onJobAdded, editJob }) {
   const [location, setLocation] = useState("");
   const [salary, setSalary] = useState("");
   const [jobType, setJobType] = useState("Full-time");
+  const [loading, setLoading] = useState(false);
 
   // Prefill form when editing
   useEffect(() => {
@@ -32,42 +33,37 @@ function AddJobModal({ isOpen, onClose, onJobAdded, editJob }) {
   if (!isOpen) return null;
 
   const handleSave = async () => {
-    if (!title || !company)
-      return alert("Please fill at least Job Title and Company!");
+    if (!title || !company) return alert("Please fill Job Title and Company!");
 
-    // Optional: convert salary to number if needed
-    const numericSalary = salary.replace(/[^0-9]/g, ""); // keep only digits
+    const token = localStorage.getItem("token"); // GET token from storage
+    if (!token) return alert("You must be logged in to add a job!");
+
+    const jobData = {
+  title: title,  // ← backend expects `title`
+  company,
+  status,
+  location,
+  salary: salary.replace(/[^0-9]/g, ""),
+  jobType,
+};
 
     try {
-      let response;
+      setLoading(true);
 
+      let response;
       if (editJob) {
-        // UPDATE existing job
+        // EDIT job
         response = await axios.put(
           `http://localhost:5000/api/jobs/${editJob._id}`,
-          {
-            position: title,
-            company,
-            status,
-            location,
-            salary: numericSalary,
-            jobType,
-          },
-          { headers: { "Content-Type": "application/json" } }
+          jobData,
+          { headers: { Authorization: `Bearer ${token}` } }
         );
       } else {
-        // CREATE new job
+        // ADD job
         response = await axios.post(
           "http://localhost:5000/api/jobs",
-          {
-            position: title,
-            company,
-            status,
-            location,
-            salary: numericSalary,
-            jobType,
-          },
-          { headers: { "Content-Type": "application/json" } }
+          jobData,
+          { headers: { Authorization: `Bearer ${token}` } }
         );
       }
 
@@ -77,15 +73,17 @@ function AddJobModal({ isOpen, onClose, onJobAdded, editJob }) {
         company,
         status,
         location,
-        salary: numericSalary,
+        salary: jobData.salary,
         jobType,
         date: new Date().toLocaleDateString(),
       });
 
       onClose();
-    } catch (error) {
-      console.log(error);
-      alert("Failed to save job. Check console.");
+    } catch (err) {
+      console.log(err);
+      alert(err.response?.data?.message || "Failed to save job. Check console.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -158,7 +156,9 @@ function AddJobModal({ isOpen, onClose, onJobAdded, editJob }) {
             <input
               type="text"
               value={salary}
-              onChange={(e) => setSalary(e.target.value.replace(/[^0-9]/g, ""))} // only numbers
+              onChange={(e) =>
+                setSalary(e.target.value.replace(/[^0-9]/g, ""))
+              }
               className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="120000"
             />
@@ -192,9 +192,12 @@ function AddJobModal({ isOpen, onClose, onJobAdded, editJob }) {
           </button>
           <button
             onClick={handleSave}
-            className="w-full sm:w-auto px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-all"
+            disabled={loading}
+            className={`w-full sm:w-auto px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-all ${
+              loading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
           >
-            {editJob ? "Update" : "Save"}
+            {loading ? "Saving..." : editJob ? "Update" : "Save"}
           </button>
         </div>
       </div>

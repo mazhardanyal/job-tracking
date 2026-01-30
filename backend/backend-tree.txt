@@ -1,0 +1,14 @@
+backend/
+├─ package.json
+├─ server.js
+├─ controllers/
+│  ├─ authController.js
+│  └─ jobController.js
+├─ middleware/
+│  └─ authMiddleware.js
+├─ models/
+│  ├─ job.js
+│  └─ users.js
+└─ routes/
+   ├─ authRoutes.js
+   └─ jobs.js
